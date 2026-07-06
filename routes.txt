@@ -1,0 +1,62 @@
+
+  GET|HEAD        / ..................................................................... home
+  POST            _ignition/execute-solution ignition.executeSolution › Spatie\LaravelIgnitio…
+  GET|HEAD        _ignition/health-check ignition.healthCheck › Spatie\LaravelIgnition › Heal…
+  POST            _ignition/update-config ignition.updateConfig › Spatie\LaravelIgnition › Up…
+  GET|HEAD        admin/dashboard ....... admin.dashboard › DashboardController@adminDashboard
+  GET|HEAD        api/user ................................................................... 
+  GET|HEAD        confirm-password password.confirm › Auth\ConfirmablePasswordController@show
+  POST            confirm-password .................. Auth\ConfirmablePasswordController@store
+  GET|HEAD        dashboard ........................................................ dashboard
+  POST            email/verification-notification verification.send › Auth\EmailVerificationN…
+  GET|HEAD        forgot-password . password.request › Auth\PasswordResetLinkController@create
+  POST            forgot-password .... password.email › Auth\PasswordResetLinkController@store
+  POST            housekeeping/assign-tasks housekeeping.assign-tasks › GuestCheckoutControll…
+  GET|HEAD        housekeeping/checkouts housekeeping.checkouts › GuestCheckoutController@ind…
+  POST            housekeeping/checkouts housekeeping.checkouts.store › GuestCheckoutControll…
+  GET|HEAD        housekeeping/checkouts/create housekeeping.checkouts.create › GuestCheckout…
+  DELETE          housekeeping/checkouts/{checkout} housekeeping.checkouts.destroy › GuestChe…
+  GET|HEAD        login ................... login › Auth\AuthenticatedSessionController@create
+  POST            login ............................ Auth\AuthenticatedSessionController@store
+  POST            logout ................ logout › Auth\AuthenticatedSessionController@destroy
+  POST            maintenance/quick-create maintenance.quick-create › MaintenanceTaskControll…
+  GET|HEAD        owner/dashboard ....... owner.dashboard › DashboardController@ownerDashboard
+  GET|HEAD        owner/tasks .............. owner.tasks › TaskAssignmentController@ownerIndex
+  GET|HEAD        owner/units ........................ owner.units › UnitController@ownerIndex
+  PUT             password .................. password.update › Auth\PasswordController@update
+  GET|HEAD        profile .............................. profile.edit › ProfileController@edit
+  PATCH           profile .......................... profile.update › ProfileController@update
+  DELETE          profile ........................ profile.destroy › ProfileController@destroy
+  GET|HEAD        register ................... register › Auth\RegisteredUserController@create
+  POST            register ............................... Auth\RegisteredUserController@store
+  POST            reset-password ........... password.store › Auth\NewPasswordController@store
+  GET|HEAD        reset-password/{token} .. password.reset › Auth\NewPasswordController@create
+  GET|HEAD        sanctum/csrf-cookie sanctum.csrf-cookie › Laravel\Sanctum › CsrfCookieContr…
+  GET|HEAD        staff .................................. staff.index › StaffController@index
+  POST            staff .................................. staff.store › StaffController@store
+  GET|HEAD        staff/create ......................... staff.create › StaffController@create
+  GET|HEAD        staff/dashboard ....... staff.dashboard › StaffDashboardController@dashboard
+  GET|HEAD        staff/export-pdf .............. staff.export-pdf › StaffController@exportPdf
+  GET|HEAD        staff/{staff} ............................ staff.show › StaffController@show
+  PUT|PATCH       staff/{staff} ........................ staff.update › StaffController@update
+  DELETE          staff/{staff} ...................... staff.destroy › StaffController@destroy
+  GET|HEAD        staff/{staff}/edit ....................... staff.edit › StaffController@edit
+  GET|HEAD        tasks/assignment ......... tasks.assignment › TaskAssignmentController@index
+  POST            tasks/auto-assign .. tasks.auto-assign › TaskAssignmentController@autoAssign
+  POST            tasks/complete ...... tasks.complete › TaskAssignmentController@completeTask
+  GET|HEAD        tasks/export-pdf ..... tasks.export-pdf › TaskAssignmentController@exportPdf
+  GET|HEAD        tasks/generate-rotation tasks.generate-rotation › TaskAssignmentController@…
+  GET|HEAD        test-staff ................................................................. 
+  GET|HEAD        units ................................... units.index › UnitController@index
+  POST            units ................................... units.store › UnitController@store
+  GET|HEAD        units/create .......................... units.create › UnitController@create
+  GET|HEAD        units/{unit} .............................. units.show › UnitController@show
+  PUT|PATCH       units/{unit} .......................... units.update › UnitController@update
+  DELETE          units/{unit} ........................ units.destroy › UnitController@destroy
+  GET|HEAD        units/{unit}/edit ......................... units.edit › UnitController@edit
+  GET|HEAD        verify-email .. verification.notice › Auth\EmailVerificationPromptController
+  GET|HEAD        verify-email/{id}/{hash} .. verification.verify › Auth\VerifyEmailController
+  GET|HEAD        workers/{user}/tasks ............. workers.tasks › WorkerTaskController@show
+
+                                                                           Showing [58] routes
+
