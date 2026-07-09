@@ -65,6 +65,12 @@
                                         <td style="padding: 12px;">{{ $unit->max_staff_allowed }} staff</td>
                                         <td style="padding: 12px; font-size: 14px;">{{ $unit->created_at->format('d M Y') }}</td>
                                         <td style="padding: 12px; text-align: center;">
+                                            <a href="{{ route('units.edit', $unit->id) }}" style="background-color: #3b82f6; color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 14px; margin-right: 8px;">Edit</a>
+                                            <form action="{{ route('units.destroy', $unit->id) }}" method="POST" style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" style="background-color: #ef4444; color: white; padding: 6px 12px; border-radius: 4px; border: none; cursor: pointer; font-size: 14px;" onclick="return confirm('Delete this unit?')">Delete</button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach

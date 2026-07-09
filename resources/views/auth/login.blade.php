@@ -97,15 +97,6 @@
                     Sign In
                 </button>
             </form>
-
-            <!-- Test Credentials Info -->
-            <div style="margin-top: 24px; padding: 16px; background-color: #f8f6e4; border-left: 4px solid #6f6e66; border-radius: 4px;">
-                <p style="color: #6f6e66; font-size: 12px; font-weight: 600; margin-bottom: 8px;">Test Credentials:</p>
-                <p style="color: #6f6e66; font-size: 12px; margin: 4px 0;"><strong>Admin:</strong> admin_001 / admin123</p>
-                <p style="color: #6f6e66; font-size: 12px; margin: 4px 0;"><strong>Staff:</strong> s01 / staff123</p>
-                <p style="color: #6f6e66; font-size: 12px; margin: 4px 0;"><strong>Handyman:</strong> h01 / handyman123</p>
-                <p style="color: #6f6e66; font-size: 12px; margin: 4px 0;"><strong>Gardener:</strong> g01 / gardener123</p>
-            </div>
         </div>
     </div>
 

@@ -1,198 +1,182 @@
 <x-app-layout>
 
-    <div class="max-w-7xl mx-auto">
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Tasks') }}
+        </h2>
+    </x-slot>
 
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">
-                Task Assignment
-            </h1>
 
-            <p class="text-gray-500 mt-2">
-                Monitor all assigned housekeeping and maintenance tasks.
-            </p>
-        </div>
 
-        <!-- Summary -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="py-12">
 
-            <div class="bg-white rounded-lg shadow p-6">
-                <p class="text-gray-500 text-sm">Total Tasks</p>
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-                <h2 class="text-3xl font-bold mt-2">
-                    {{ $tasks->count() }}
-                </h2>
+            <!-- Description -->
+            <div class="mb-6">
+                <p class="text-gray-600">
+                    Monitor all assigned housekeeping and maintenance tasks.
+                </p>
             </div>
 
-            <div class="bg-white rounded-lg shadow p-6">
-                <p class="text-gray-500 text-sm">Pending</p>
+            <div class="mb-6 flex gap-3">
 
-                <h2 class="text-3xl font-bold text-yellow-600 mt-2">
-                    {{ $tasks->where('status','pending')->count() }}
-                </h2>
+    <a href="{{ route('owner.tasks.approval') }}"
+       class="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg">
+        ✅ Task Approval
+    </a>
+
+    <a href="{{ route('owner.tasks.history') }}"
+       class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2 rounded-lg">
+        📜 Task History
+    </a>
+
+</div>
+
+            <!-- Summary -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+                <div class="bg-white rounded-lg shadow p-6">
+                    <p class="text-gray-500 text-sm">Total Tasks</p>
+
+                    <h2 class="text-3xl font-bold mt-2">
+                        {{ $tasks->count() }}
+                    </h2>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-6">
+                    <p class="text-gray-500 text-sm">Pending</p>
+
+                    <h2 class="text-3xl font-bold text-yellow-600 mt-2">
+                        {{ $tasks->where('status', 'pending')->count() }}
+                    </h2>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-6">
+                    <p class="text-gray-500 text-sm">Completed</p>
+
+                    <h2 class="text-3xl font-bold text-green-600 mt-2">
+                        {{ $tasks->where('status', 'completed')->count() }}
+                    </h2>
+                </div>
+
             </div>
 
-            <div class="bg-white rounded-lg shadow p-6">
-                <p class="text-gray-500 text-sm">Completed</p>
+            <!-- Table -->
+            <div class="bg-white rounded-lg shadow">
 
-                <h2 class="text-3xl font-bold text-green-600 mt-2">
-                    {{ $tasks->where('status','completed')->count() }}
-                </h2>
-            </div>
+                <div class="p-6 border-b">
+                    <h2 class="text-xl font-bold">
+                        All Tasks
+                    </h2>
+                </div>
 
-        </div>
+                <div class="overflow-x-auto">
 
-        <!-- Table -->
+                    <table class="min-w-full">
 
-        <div class="bg-white rounded-lg shadow">
+                        <thead class="bg-gray-100">
 
-            <div class="p-6 border-b">
-                <h2 class="text-xl font-bold">
-                    All Tasks
-                </h2>
-            </div>
+                            <tr>
+                                <th class="px-6 py-3 text-left">Unit</th>
+                                <th class="px-6 py-3 text-left">Task</th>
+                                <th class="px-6 py-3 text-left">Assigned Staff</th>
+                                <th class="px-6 py-3 text-left">Status</th>
+                                <th class="px-6 py-3 text-left">Type</th>
+                                <th class="px-6 py-3 text-left">Action</th>
+                            </tr>
 
-            <div class="overflow-x-auto">
+                        </thead>
 
-                <table class="min-w-full">
+                        <tbody>
 
-                    <thead class="bg-gray-100">
+                        @forelse($tasks as $task)
 
-                        <tr>
+                            <tr class="border-b">
 
-                            <th class="px-6 py-3 text-left">
-                                Unit
-                            </th>
+                                <td class="px-6 py-4">
+                                    {{ $task->unit->unit_name ?? '-' }}
+                                </td>
 
-                            <th class="px-6 py-3 text-left">
-                                Task
-                            </th>
+                                <td class="px-6 py-4">
 
-                            <th class="px-6 py-3 text-left">
-                                Assigned Staff
-                            </th>
+                                    @if(get_class($task) == 'App\Models\HousekeepingTask')
+                                        {{ $task->cleaningTask->task_name }}
+                                    @else
+                                        {{ $task->task_name }}
+                                    @endif
 
-                            <th class="px-6 py-3 text-left">
-                                Status
-                            </th>
+                                </td>
 
-                            <th class="px-6 py-3 text-left">
-                                Type
-                            </th>
+                                <td class="px-6 py-4">
+                                    {{ $task->assignedStaff->name ?? $task->assignedStaff->code ?? 'Not Assigned' }}
+                                </td>
 
-                            <th class="px-6 py-3 text-left">
-                                Action
-                            </th>
+                                <td class="px-6 py-4">
 
-                        </tr>
+                                    @if($task->status == 'completed')
 
-                    </thead>
+                                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+                                            Completed
+                                        </span>
 
-                    <tbody>
+                                    @else
 
-                    @forelse($tasks as $task)
+                                        <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
+                                            Pending
+                                        </span>
 
-                        <tr class="border-b">
+                                    @endif
 
-                            <td class="px-6 py-4">
+                                </td>
 
-                                {{ $task->unit->unit_name ?? '-' }}
+                                <td class="px-6 py-4">
 
-                            </td>
+                                    @if(get_class($task) == 'App\Models\HousekeepingTask')
+                                        🧹 Housekeeping
+                                    @else
+                                        🔧 Maintenance
+                                    @endif
 
-                            <td class="px-6 py-4">
+                                </td>
 
-                                @if(get_class($task) == 'App\Models\HousekeepingTask')
+                                <td class="px-6 py-4">
 
-                                    {{ $task->cleaningTask->task_name }}
+                                    @if($task->status == 'completed')
 
-                                @else
+                                        <button class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm">
+                                            👁 View
+                                        </button>
 
-                                    {{ $task->task_name }}
+                                    @else
 
-                                @endif
+                                        <span class="text-gray-400 text-sm">
+                                            No Evidence
+                                        </span>
 
-                            </td>
+                                    @endif
 
-                            <td class="px-6 py-4">
+                                </td>
 
-                                {{ $task->assignedStaff->name ?? $task->assignedStaff->code ?? 'Not Assigned' }}
+                            </tr>
 
-                            </td>
+                        @empty
 
-                            <td class="px-6 py-4">
+                            <tr>
 
-                                @if($task->status == 'completed')
+                                <td colspan="6" class="text-center py-8 text-gray-500">
+                                    No tasks available.
+                                </td>
 
-                                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+                            </tr>
 
-                                        Completed
+                        @endforelse
 
-                                    </span>
+                        </tbody>
 
-                                @else
+                    </table>
 
-                                    <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
-
-                                        Pending
-
-                                    </span>
-
-                                @endif
-
-                            </td>
-
-                            <td class="px-6 py-4">
-
-                                @if(get_class($task) == 'App\Models\HousekeepingTask')
-
-                                    🧹 Housekeeping
-
-                                @else
-
-                                    🔧 Maintenance
-
-                                @endif
-
-                            </td>
-
-                            <td class="px-6 py-4">
-
-                                @if($task->status == 'completed')
-
-                                    <button
-                                        class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm">
-                                        👁 View
-                                    </button>
-
-                                @else
-
-                                    <span class="text-gray-400 text-sm">
-                                        No Evidence
-                                    </span>
-
-                                @endif
-
-                            </td>
-
-                        </tr>
-
-                    @empty
-
-                        <tr>
-
-                            <td colspan="5" class="text-center py-8 text-gray-500">
-
-                                No tasks available.
-
-                            </td>
-
-                        </tr>
-
-                    @endforelse
-
-                    </tbody>
-
-                </table>
+                </div>
 
             </div>
 

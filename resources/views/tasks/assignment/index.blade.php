@@ -2,21 +2,42 @@
     <div style="max-width: 1400px; margin: 0 auto;">
         <!-- Header with Buttons -->
         <div style="display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap;">
-            <a href="{{ route('tasks.generate-rotation') }}" style="padding: 12px 24px; background-color: #06b6d4; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; border: none; cursor: pointer;">
-                🔄 Generate Rotation
-            </a>
-            @if($pendingTasks->count() > 0)
-                <form method="POST" action="{{ route('tasks.auto-assign') }}" style="display: inline;">
-                    @csrf
-                    <button type="submit" style="padding: 12px 24px; background-color: #8b5cf6; color: white; border-radius: 8px; border: none; cursor: pointer; font-weight: bold;" onclick="return confirm('Auto-assign {{ $pendingTasks->count() }} pending tasks?')">
-                        🤖 Auto-Assign All
-                    </button>
-                </form>
-            @endif
-            <a href="{{ route('tasks.export-pdf') }}" style="padding: 12px 24px; background-color: #ef4444; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; border: none;">
-                📄 Export PDF
-            </a>
-        </div>
+    <a href="{{ route('tasks.generate-rotation') }}" style="padding: 12px 24px; background-color: #06b6d4; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; border: none; cursor: pointer;">
+        🔄 Generate Rotation
+    </a>
+
+    @if($pendingTasks->count() > 0)
+        <form method="POST" action="{{ route('tasks.auto-assign') }}" style="display: inline;">
+            @csrf
+            <button type="submit" style="padding: 12px 24px; background-color: #8b5cf6; color: white; border-radius: 8px; border: none; cursor: pointer; font-weight: bold;" onclick="return confirm('Auto-assign {{ $pendingTasks->count() }} pending tasks?')">
+                🤖 Auto-Assign All
+            </button>
+        </form>
+    @endif
+
+    <a href="{{ route('tasks.export-pdf') }}" style="padding: 12px 24px; background-color: #ef4444; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; border: none;">
+        📄 Export PDF
+    </a>
+
+    <a href="{{ route('tasks.approval') }}"
+       style="padding: 12px 24px; background-color: #10b981; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; border: none;">
+
+        ✅ Task Approval
+
+        @if($pendingApprovals > 0)
+            ({{ $pendingApprovals }})
+        @endif
+
+    </a>
+
+    <a href="{{ route('tasks.history') }}"
+   style="padding: 12px 24px; background-color: #6366f1; color: white; border-radius: 8px; text-decoration: none; font-weight: bold;">
+
+    📜 Task History
+
+</a>
+
+</div>
 
         <!-- Status Messages -->
         @if (session('success'))
@@ -62,11 +83,30 @@
                 <div>
                     <label style="display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px; color: #374151;">Assign To</label>
                     <select name="assigned_staff_id" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
-                        <option value="">Auto-assign</option>
-                        @foreach(\App\Models\User::whereIn('role', ['handyman', 'gardener'])->get() as $worker)
-                            <option value="{{ $worker->id }}">{{ $worker->code }} ({{ ucfirst($worker->role) }})</option>
-                        @endforeach
-                    </select>
+
+    <option value="">Auto-assign</option>
+
+    <option value="housekeeping">
+        Housekeeping Staff (Auto)
+    </option>
+
+    <optgroup label="Handyman">
+        @foreach(\App\Models\User::where('role','handyman')->get() as $worker)
+            <option value="{{ $worker->id }}">
+                {{ $worker->code }}
+            </option>
+        @endforeach
+    </optgroup>
+
+    <optgroup label="Gardener">
+        @foreach(\App\Models\User::where('role','gardener')->get() as $worker)
+            <option value="{{ $worker->id }}">
+                {{ $worker->code }}
+            </option>
+        @endforeach
+    </optgroup>
+
+</select>
                 </div>
                 <button type="submit" style="padding: 10px 20px; background-color: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px;">
                     Add Task

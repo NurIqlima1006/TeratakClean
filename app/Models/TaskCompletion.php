@@ -10,12 +10,16 @@ class TaskCompletion extends Model
     use HasFactory;
 
     protected $fillable = [
-        'housekeeping_task_id',
-        'maintenance_task_id',
-        'staff_id',
-        'image_path',
-        'completion_notes',
-    ];
+    'housekeeping_task_id',
+    'maintenance_task_id',
+    'staff_id',
+    'image_path',
+    'completion_notes',
+
+    'approval_status',
+    'approved_by',
+    'approved_at',
+];
 
     /**
      * Housekeeping Task

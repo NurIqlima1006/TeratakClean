@@ -26,7 +26,7 @@ class UnitController extends Controller
         // Get all units with pagination
         $units = $query->paginate(10);
         
-        return view('units.index', compact('units', 'search'));
+        return view('admin.units.index', compact('units', 'search'));
     }
 
     /**
@@ -34,7 +34,7 @@ class UnitController extends Controller
      */
     public function create()
     {
-        return view('units.create');
+        return view('admin.units.create');
     }
 
     /**
@@ -52,7 +52,7 @@ class UnitController extends Controller
         // Create unit
         Unit::create($validated);
         
-        return redirect()->route('units.index')
+        return redirect()->route('admin.units.index')
             ->with('success', 'Unit created successfully!');
     }
 
@@ -79,7 +79,7 @@ class UnitController extends Controller
         // Update unit
         $unit->update($validated);
         
-        return redirect()->route('units.index')
+        return redirect()->route('admin.units.index')
             ->with('success', 'Unit updated successfully!');
     }
 
@@ -91,7 +91,7 @@ class UnitController extends Controller
         // Delete unit
         $unit->delete();
         
-        return redirect()->route('units.index')
+        return redirect()->route('admin.units.index')
             ->with('success', 'Unit deleted successfully!');
     }
     /**

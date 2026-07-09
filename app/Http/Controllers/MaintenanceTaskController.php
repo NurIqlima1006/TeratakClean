@@ -19,14 +19,40 @@ class MaintenanceTaskController extends Controller
             'unit_id' => 'required|exists:units,id',
             'task_name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
-            'assigned_staff_id' => 'nullable|exists:users,id',
+            'assigned_staff_id' => 'nullable',
         ]);
+
+        // Determine who should receive the task
+        $assignedStaffId = $validated['assigned_staff_id'] ?? null;
+
+        // If "Housekeeping Staff (Auto)" is selected
+        if ($assignedStaffId === 'housekeeping') {
+
+            $housekeepingStaff = User::where('role', 'staff')->get();
+
+            $leastBusy = null;
+            $lowestTasks = PHP_INT_MAX;
+
+            foreach ($housekeepingStaff as $staff) {
+
+                $taskCount = MaintenanceTask::where('assigned_staff_id', $staff->id)
+                    ->where('status', 'pending')
+                    ->count();
+
+                if ($taskCount < $lowestTasks) {
+                    $lowestTasks = $taskCount;
+                    $leastBusy = $staff;
+                }
+            }
+
+            $assignedStaffId = $leastBusy?->id;
+        }
         
         MaintenanceTask::create([
             'unit_id' => $validated['unit_id'],
             'task_name' => $validated['task_name'],
             'description' => $validated['description'],
-            'assigned_staff_id' => $validated['assigned_staff_id'] ?? null, // Keep null if not selected
+            'assigned_staff_id' => $assignedStaffId,
             'status' => 'pending',
             'scheduled_date' => now(),
         ]);

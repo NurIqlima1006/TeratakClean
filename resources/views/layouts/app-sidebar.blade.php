@@ -13,8 +13,10 @@
             <!-- Sidebar -->
             <div class="w-64 bg-gray-900 text-white flex flex-col">
                 <!-- Logo -->
-                <div class="p-6 border-b border-gray-700">
-                    <h1 class="text-2xl font-bold">TeratakClean</h1>
+                <div class="p-6 border-b border-gray-700 flex justify-center items-center">
+                <img src="{{ asset('images/logo.png') }}"
+                    alt="Teratak Sofea Logo"
+                    class="h-20 w-auto">
                 </div>
 
                 <!-- Navigation Links -->

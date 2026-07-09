@@ -51,8 +51,17 @@ class TaskAssignmentController extends Controller
                 'pending_tasks' => $workload,
             ];
         }
-    
-        return view('tasks.assignment.index', compact('pendingTasks', 'staff', 'staffWorkload'));
+
+        $pendingApprovals = \App\Models\TaskCompletion::where('approval_status', 'pending')->count();
+        return view(
+    'tasks.assignment.index',
+    compact(
+        'pendingTasks',
+        'staff',
+        'staffWorkload',
+        'pendingApprovals'
+    )
+);
     }
 
     /**
@@ -187,11 +196,13 @@ class TaskAssignmentController extends Controller
 
                 // Create task completion record
                 TaskCompletion::create([
-                    'housekeeping_task_id' => $task->id,
-                    'staff_id' => $user->id,
-                    'image_path' => $imagePath,
-                    'completion_notes' => $validated['notes'] ?? null,
-                ]);
+    'housekeeping_task_id' => $task->id,
+    'staff_id' => $user->id,
+    'image_path' => $imagePath,
+    'completion_notes' => $validated['notes'] ?? null,
+
+    'approval_status' => 'pending',
+]);
             } else {
                 $task = MaintenanceTask::findOrFail($taskId);
                 $task->update([
@@ -201,12 +212,14 @@ class TaskAssignmentController extends Controller
 
                 // Create task completion record with maintenance task
                 TaskCompletion::create([
-                    'housekeeping_task_id' => null,
-                    'maintenance_task_id' => $task->id,
-                    'staff_id' => $user->id,
-                    'image_path' => $imagePath,
-                    'completion_notes' => $validated['notes'] ?? null,
-                ]);
+    'housekeeping_task_id' => null,
+    'maintenance_task_id' => $task->id,
+    'staff_id' => $user->id,
+    'image_path' => $imagePath,
+    'completion_notes' => $validated['notes'] ?? null,
+
+    'approval_status' => 'pending',
+]);
             }
 
             return response()->json(['success' => true, 'message' => 'Task completed!']);
@@ -240,4 +253,93 @@ class TaskAssignmentController extends Controller
 
         return view('owner.tasks.index', compact('tasks'));
     }
+
+            /**
+         * Admin Approval Page
+         */
+        public function approval()
+{
+    $completions = \App\Models\TaskCompletion::with([
+        'staff',
+        'housekeepingTask.unit',
+        'housekeepingTask.cleaningTask',
+        'maintenanceTask.unit',
+    ])
+    ->where('approval_status', 'pending')
+    ->latest()
+    ->get();
+
+    return view('admin.tasks.approval', compact('completions'));
+}
+
+        /**
+         * Owner Approval Page
+         */
+        /**
+ * Owner Approval Page
+ */
+public function ownerApproval()
+{
+    $completions = \App\Models\TaskCompletion::with([
+        'staff',
+        'housekeepingTask.unit',
+        'housekeepingTask.cleaningTask',
+        'maintenanceTask.unit'
+    ])
+    ->where('approval_status', 'pending')
+    ->latest()
+    ->get();
+
+    return view('owner.tasks.approval', compact('completions'));
+}
+
+/**
+ * Owner Task History
+ */
+public function ownerHistory()
+{
+    $completions = \App\Models\TaskCompletion::with([
+        'staff',
+        'housekeepingTask.unit',
+        'housekeepingTask.cleaningTask',
+        'maintenanceTask.unit'
+    ])
+    ->where('approval_status', 'approved')
+    ->latest()
+    ->get();
+
+    return view('owner.tasks.history', compact('completions'));
+}
+
+/**
+ * Approve completed task
+ */
+public function approve(\App\Models\TaskCompletion $completion)
+{
+    $completion->update([
+        'approval_status' => 'approved',
+        'approved_by' => auth()->id(),
+        'approved_at' => now(),
+    ]);
+
+    return back()->with('success', 'Task approved successfully!');
+}
+
+/**
+ * Display completed task history.
+ */
+public function history()
+{
+    $completions = \App\Models\TaskCompletion::with([
+        'staff',
+        'housekeepingTask.unit',
+        'housekeepingTask.cleaningTask',
+        'maintenanceTask.unit'
+    ])
+    ->where('approval_status', 'approved')
+    ->latest()
+    ->get();
+
+    return view('admin.tasks.history', compact('completions'));
+}
 }

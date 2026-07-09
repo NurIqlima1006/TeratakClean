@@ -42,7 +42,7 @@ class StaffController extends Controller
             return $member;
         });
         
-        return view('staff.index', compact('staff', 'search'));
+        return view('admin.staff.index', compact('staff', 'search'));
     }
 
     /**
@@ -62,7 +62,7 @@ class StaffController extends Controller
             $nextCode = 's' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT);
         }
         
-        return view('staff.create', compact('nextCode'));
+        return view('admin.staff.create', compact('nextCode'));
     }
 
     /**
@@ -102,7 +102,7 @@ class StaffController extends Controller
             abort(404);
         }
         
-        return view('staff.edit', compact('staff'));
+        return view('admin.staff.edit', compact('staff'));
     }
 
     /**
