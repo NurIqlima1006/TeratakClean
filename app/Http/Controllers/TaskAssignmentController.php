@@ -69,62 +69,31 @@ class TaskAssignmentController extends Controller
      */
     public function autoAssign(Request $request)
 {
-    // Get all pending housekeeping tasks
-    $housekeepingTasks = HousekeepingTask::where('status', 'pending')
-        ->where('assigned_staff_id', null)
+    $tasks = HousekeepingTask::where('status', 'pending')
+        ->whereNull('assigned_staff_id')
         ->get();
-    
-    // Get all pending maintenance tasks
-    $maintenanceTasks = MaintenanceTask::where('status', 'pending')
-        ->where('assigned_staff_id', null)
-        ->get();
-    
-    $allTasks = $housekeepingTasks->merge($maintenanceTasks);
-    
-    if ($allTasks->isEmpty()) {
-        return redirect()->route('tasks.assignment')
-            ->with('warning', 'No pending tasks to assign!');
+
+    $staff = User::where('role', 'staff')->get();
+
+    if ($tasks->isEmpty()) {
+        return back()->with('warning', 'No pending tasks.');
     }
-    
-    // Get all staff
-    $staff = User::whereIn('role', ['staff', 'handyman', 'gardener'])->get();
-    
+
     if ($staff->isEmpty()) {
-        return redirect()->route('tasks.assignment')
-            ->with('error', 'No workers available for assignment!');
+        return back()->with('error', 'No staff found.');
     }
-    
-    $tasksAssigned = 0;
-    
-    // Auto-assign each task
-    foreach ($allTasks as $task) {
-        // Find least loaded worker
-        $leastLoadedStaff = null;
-        $minWorkload = PHP_INT_MAX;
-        
-        foreach ($staff as $member) {
-            $workload = HousekeepingTask::where('assigned_staff_id', $member->id)
-                ->where('status', 'pending')
-                ->count();
-            $workload += MaintenanceTask::where('assigned_staff_id', $member->id)
-                ->where('status', 'pending')
-                ->count();
-            
-            if ($workload < $minWorkload) {
-                $minWorkload = $workload;
-                $leastLoadedStaff = $member;
-            }
-        }
-        
-        // Assign task
-        if ($leastLoadedStaff) {
-            $task->update(['assigned_staff_id' => $leastLoadedStaff->id]);
-            $tasksAssigned++;
-        }
+
+    $i = 0;
+
+    foreach ($tasks as $task) {
+        $task->update([
+            'assigned_staff_id' => $staff[$i % $staff->count()]->id
+        ]);
+
+        $i++;
     }
-    
-    return redirect()->route('tasks.assignment')
-        ->with('success', "Successfully assigned {$tasksAssigned} tasks!");
+
+    return back()->with('success', 'Tasks assigned successfully!');
 }
 /**
      * Generate weekly rotation tasks.
