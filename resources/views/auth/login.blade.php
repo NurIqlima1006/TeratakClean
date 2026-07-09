@@ -32,7 +32,7 @@
 
                 <!-- Code Input -->
                 <div style="margin-bottom: 24px;">
-                    <label for="code" style="display: block; font-weight: 600; color: #1f2937; margin-bottom: 8px;">Staff Code</label>
+                    <label for="code" style="display: block; font-weight: 600; color: #1f2937; margin-bottom: 8px;">Code</label>
                     <input 
                         id="code"
                         style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; box-sizing: border-box;"
